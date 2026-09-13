@@ -205,7 +205,7 @@ function activityV5(sc,t){const idx=sc.beats.indexOf(beatAt(t)),age=t-sc.beats[M
 function restaurantV5(sc,t){const idx=sc.beats.indexOf(beatAt(t)),age=k=>t-sc.beats.find(b=>b.key===k).start;
  if(idx===0){message(100,310,760,'LA VOSTRA NECESSITAT','Vull actualitzar activitats i mostrar el programa als clients.',age('code'),true);message(1030,310,790,'CODI · INSTRUCCIONS','Mostrar la pantalla → processar el canvi → guardar la informació.',age('code')-1);takeaway('Com es construeix una aplicació?','La IA ens pot ajudar a escriure el codi a partir del que li expliquem.');return;}
  const parts=[['Sala','Frontend','Pantalles · botons · formularis','frontend'],['Cuina','Backend','Codi que processa les peticions','backend'],['Rebost','Base de dades','Noms · horaris · estats','database']];
- parts.forEach((p,i)=>{const x=100+i*580;reveal(age('restaurant')-i*.35,()=>{card(x,305,560,320,p[0].toUpperCase());text(p[0],x+25,420,48,P.cream,600,'left',true);if(age(p[3])>=0){reveal(age(p[3]),()=>{text(p[1],x+25,494,37,P.terra,600);para(p[2],x+25,551,505,27,P.sage);});}if(idx===i+2)line([[x,325],[x,605]],P.terra,3);});});
+ parts.forEach((p,i)=>{const x=100+i*580;reveal(age('restaurant')-i*1.1,()=>{card(x,305,560,320,p[0].toUpperCase());text(p[0],x+25,420,48,P.cream,600,'left',true);if(age(p[3])>=0){reveal(age(p[3]),()=>{text(p[1],x+25,494,37,P.terra,600);para(p[2],x+25,551,505,27,P.sage);});}if(idx===i+2)line([[x,325],[x,605]],P.terra,3);});});
  reveal(age('storage'),()=>{round(1260,660,560,145);text('Magatzem de fitxers · Storage',1285,710,28,P.terra,600);text('Fotos · PDFs · vídeos',1285,766,29,P.sage);});
  if(idx>=6){arrow(675,465,705,465,age('flow'));arrow(1255,465,1285,465,age('flow')-1);text('Un canvi de lloc',100,712,30,P.cream,600);text('La petició recorre les peces.',100,760,29,P.sage);}
  if(idx===7){round(100,660,1100,145);text('Web → Apps Script → Google Sheets',125,712,33,P.terra,600);text('Drive per als fitxers. La IA ajuda a construir el codi.',125,766,27,P.sage);}
@@ -222,6 +222,75 @@ function renderScene(s){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.fill
  else ({opening:openingDemo,sheet:sheetDemo,dataVariants:variants,document:documentDemo,docVariants:variants,types:typesV5,activity:activityV5,restaurant:restaurantV5,ai:aiV5,plan:planV5,close:closeDemo}[sc.kind])(sc,s.t);
  subtitles(s);
 }
+
+/* Visual vocabulary for the automatic whiteboard. No wall-clock animation. */
+function pictogram(kind,x,y,size=48,color=P.terra){
+ ctx.save();ctx.translate(x,y);ctx.scale(size/48,size/48);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+ const path=ps=>{ctx.beginPath();ps.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke()};
+ const box=(a,b,w,h)=>{ctx.beginPath();ctx.roundRect(a,b,w,h,3);ctx.stroke()};
+ const circle=(a,b,r)=>{ctx.beginPath();ctx.arc(a,b,r,0,Math.PI*2);ctx.stroke()};
+ if(kind==='sheet'||kind==='excel'){box(12,5,31,38);path([[12,15],[43,15]]);[24,33].forEach(a=>path([[a,15],[a,43]]));[24,33].forEach(a=>path([[12,a],[43,a]]));if(kind==='excel'){ctx.fillStyle=P.panel;ctx.fillRect(2,15,23,24);box(2,15,23,24);path([[8,21],[19,33]]);path([[19,21],[8,33]])}}
+ else if(kind==='repair'){path([[30,6],[25,12],[29,20],[37,23],[43,17],[42,28],[34,32],[26,28],[12,42],[6,36],[20,22],[17,14],[21,6],[30,6]]);circle(11,36,1.5)}
+ else if(kind==='calendar'){box(5,9,38,34);path([[5,20],[43,20]]);path([[15,4],[15,14]]);path([[33,4],[33,14]]);path([[14,31],[21,37],[34,25]])}
+ else if(kind==='box'){path([[5,14],[24,5],[43,14],[43,35],[24,44],[5,35],[5,14],[24,23],[43,14]]);path([[24,23],[24,44]]);path([[14,10],[34,19],[34,28]])}
+ else if(kind==='clock'){circle(24,24,19);path([[24,12],[24,25],[33,30]])}
+ else if(kind==='alert'){path([[24,4],[45,42],[3,42],[24,4]]);path([[24,17],[24,28]]);circle(24,35,1)}
+ else if(kind==='check'){box(7,5,34,38);[15,26,37].forEach(a=>{path([[12,a-2],[15,a+1],[19,a-4]]);path([[25,a-1],[35,a-1]])})}
+ else if(kind==='person'||kind==='team'){circle(24,14,7);path([[10,42],[10,34],[15,26],[33,26],[38,34],[38,42]]);if(kind==='team'){path([[4,20],[4,32]]);path([[44,20],[44,32]])}}
+ else if(kind==='chat'){box(4,6,40,29);path([[13,35],[13,44],[25,35]]);[14,24,34].forEach(a=>circle(a,21,1))}
+ else if(kind==='code'){path([[16,12],[5,24],[16,36]]);path([[32,12],[43,24],[32,36]]);path([[28,7],[21,41]])}
+ else if(kind==='screen'){box(3,6,42,29);path([[18,35],[18,42],[30,42],[30,35]]);path([[12,42],[36,42]]);path([[3,14],[45,14]])}
+ else if(kind==='database'){ctx.beginPath();ctx.ellipse(24,10,18,6,0,0,Math.PI*2);ctx.stroke();path([[6,10],[6,38]]);path([[42,10],[42,38]]);[24,38].forEach(a=>{ctx.beginPath();ctx.ellipse(24,a,18,6,0,0,Math.PI);ctx.stroke()})}
+ else if(kind==='folder'){path([[4,13],[4,7],[20,7],[25,13],[44,13],[44,41],[4,41],[4,13]])}
+ else if(kind==='chef'){path([[13,29],[7,24],[5,15],[10,8],[19,8],[24,3],[30,8],[38,8],[43,15],[41,24],[35,29],[35,42],[13,42],[13,29]]);path([[13,34],[35,34]])}
+ else if(kind==='shop'){box(7,20,34,23);path([[3,20],[9,7],[39,7],[45,20],[3,20]]);path([[18,43],[18,29],[30,29],[30,43]])}
+ else if(kind==='book'){path([[24,42],[16,38],[4,38],[4,7],[15,7],[24,12],[33,7],[44,7],[44,38],[33,38],[24,42],[24,12]])}
+ else if(kind==='poster'){box(8,4,32,40);box(14,10,20,11);[28,35].forEach(a=>path([[15,a],[33,a]]))}
+ else if(kind==='bulb'){circle(24,18,13);path([[16,29],[17,37],[31,37],[32,29]]);path([[20,43],[28,43]])}
+ else {box(8,4,32,40);[14,23,32].forEach(a=>path([[15,a],[33,a]]))}
+ ctx.restore();
+}
+function iconTile(kind,x,y,size=68){round(x,y,size,size,8,P.soft,P.dim);pictogram(kind,x+12,y+12,size-24)}
+// A quiet heading replaces the projected timing track. Prompter timing is unchanged.
+header=function(sc,t){text(sc.question.toUpperCase(),100,65,22,P.terra,600);text(sc.title,100,151,61,P.cream,600,'left',true);const b=beatAt(t);text(b?.pause?'Penseu en una tasca concreta':b?.label||'',100,232,22,P.sage);if(['sheet','document','dataVariants','activity'].includes(sc.kind))tag('SIMULACIÓ · DADES FICTÍCIES',1460,40,360)};
+const plainCard=card;
+card=function(x,y,w,h,title){plainCard(x,y,w,h,title);let key=/COMANDES/.test(title)?'excel':/PROCEDIMENT|CARTELL/.test(title)?'poster':/CLIENT/.test(title)?'person':/EQUIP/.test(title)?'team':/SALA/.test(title)?'screen':/CUINA/.test(title)?'chef':/REBOST/.test(title)?'database':/Reparacions/.test(title)?'repair':/Incidències/.test(title)?'alert':/Reserves/.test(title)?'calendar':null;if(key)pictogram(key,x+w-56,y+10,40)};
+const plainOpening=openingDemo;
+openingDemo=function(sc,t){plainOpening(sc,t);const idx=sc.beats.indexOf(beatAt(t));if(idx<2){pictogram('clock',902,290,100);return}if(idx===2){pictogram('person',1490,380,145);pictogram('bulb',1660,480,90);return}['excel','poster','screen'].forEach((k,i)=>reveal(t-beatAt(t).start-i*.5,()=>pictogram(k,590+i*580,365,48)))};
+const plainSheet=sheetDemo;
+// Keep the stock takeaway clear instead of drawing over its line of text.
+sheetDemo=function(sc,t){plainSheet(sc,t);const idx=sc.beats.indexOf(beatAt(t));if(idx<2){iconTile('excel',1170,575,80);text('Excel / full de càlcul',1275,625,26,P.sage)}};
+const plainTypes=typesV5;
+typesV5=function(sc,t){const idx=sc.beats.indexOf(beatAt(t));if(idx===0){['Registrar','Actualitzar','Consultar'].forEach((label,i)=>reveal(t-sc.start-i*.55,()=>{const x=100+i*580;card(x,320,560,355,label.toUpperCase());iconTile(['check','repair','screen'][i],x+220,415,100);text(['Una entrada','Un canvi d’estat','La informació al dia'][i],x+280,596,30,P.cream,600,'center');if(i<2)arrow(x+565,490,x+575,490,(t-sc.start-i*.55)/1.2)}));return}plainTypes(sc,t);['box','repair','alert','calendar','check','clock'].forEach((k,i)=>reveal(t-sc.beats[i<2?1:i<4?2:3].start-(i%2)*.5,()=>pictogram(k,600+(i%3)*580,310+Math.floor(i/3)*225,40)))};
+const plainActivity=activityV5;
+activityV5=function(sc,t){plainActivity(sc,t);const idx=sc.beats.indexOf(beatAt(t));pictogram(idx?'shop':'calendar',695,472,65);pictogram('calendar',1700,405,66);reveal(t-sc.start,()=>{iconTile(idx===2?'check':'chat',910,383,92);text(idx===2?'Publicat':'Un canvi',956,525,22,P.sage,600,'center')})};
+const plainRestaurant=restaurantV5;
+restaurantV5=function(sc,t){plainRestaurant(sc,t);const idx=sc.beats.indexOf(beatAt(t));if(idx===0){reveal(t-sc.start-1,()=>{iconTile('chat',350,550,90);arrow(495,595,680,595,(t-sc.start-1)/1.5);iconTile('code',735,550,90);arrow(880,595,1065,595,(t-sc.start-2)/1.5);iconTile('screen',1120,550,90)});}else if(idx>=5){reveal(t-sc.beats[5].start,()=>pictogram('folder',1745,735,46))}};
+const plainVariants=variants;
+variants=function(sc,t){if(sc.kind==='dataVariants'){plainVariants(sc,t);const idx=sc.beats.indexOf(beatAt(t));['clock','box','excel'].forEach((k,i)=>pictogram(k,600+i*580,296,32,i===idx?P.cream:P.sage));return}
+ const idx=sc.beats.indexOf(beatAt(t)),age=t-beatAt(t).start;
+ const data=[{title:'Una guia per al primer dia',icon:'person',source:'Manual de la màquina',goal:'Guia d’acollida',steps:['Material que necessites','Primers passos','A qui pots preguntar'],ask:'Explica-ho per a algú que comença avui.'},{title:'Un relleu que no es deixa res',icon:'check',source:'Notes del torn',goal:'Llista de comprovació',steps:['Revisa el material','Anota què queda pendent','Comunica les incidències'],ask:'Prepara una llista breu per al següent torn.'},{title:'Informació clara per al client',icon:'shop',source:'Informació del servei',goal:'Avís per compartir',steps:['Què oferim','Quan i on','Com contactar'],ask:'Fes una versió clara per enviar o publicar.'}][idx];
+ ['Acollida','Relleu de torn','Clients'].forEach((v,i)=>{round(100+i*580,280,560,55,6,idx===i?'#1a5fd2':P.panel);text(v,125+i*580,317,25,idx===i?P.cream:P.sage,600);pictogram(['person','check','shop'][i],600+i*580,291,32,idx===i?P.cream:P.sage)});
+ reveal(age,()=>{card(100,375,430,335,'INFORMACIÓ DE PARTIDA');iconTile('book',255,462,104);para(data.source,130,618,365,30,P.cream,600)});
+ reveal(age-.5,()=>{message(610,405,440,'LA VOSTRA PETICIÓ',data.ask,age-.5,true);arrow(548,530,590,530,(age-.5)/1.2)});
+ reveal(age-1.1,()=>{card(1130,375,690,335,data.goal.toUpperCase());pictogram(data.icon,1757,390,34);data.steps.forEach((v,i)=>reveal(age-1.2-i*.6,()=>{pictogram('check',1160,470+i*64,34);text(v,1215,499+i*64,29)}));arrow(1065,530,1110,530,(age-1)/1.2)});
+ takeaway(data.title,'L’equip revisa el contingut i comprova que s’entén.');
+};
+const plainCardsV5=cardsV5;
+cardsV5=function(sc,t,items){if(sc.kind!=='appVariants'){plainCardsV5(sc,t,items);if(sc.kind==='ai')['chat','book','check'].forEach((k,i)=>reveal(t-sc.start-i*.45,()=>pictogram(k,590+i*580,322,48)));return}
+ const idx=sc.beats.indexOf(beatAt(t));
+ const state=Math.min(idx===0?2:1,Math.floor(Math.max(0,t-beatAt(t).start)/1.1));
+ items.forEach((it,i)=>reveal(t-sc.start-i*.45,()=>{const x=100+i*580;card(x,300,560,420,it[0]);iconTile(['repair','alert','calendar'][i],x+25,394,96);para(it[1],x+150,432,380,35,P.cream,600);para(it[2],x+25,557,505,27,P.sage);const labels=[['Entrada','Reparació','Recollida'],['Avís','Assignació','Resolució'],['Consulta','Reserva','Retorn']][i];labels.forEach((v,j)=>{const xx=x+25+j*172;round(xx,620,160,55,6,j===state&&i===idx?P.soft:P.panel,j===state&&i===idx?P.terra:P.dim);text(v,xx+80,654,20,j===state&&i===idx?P.terra:P.sage,600,'center');if(j<2)arrow(xx+162,647,xx+170,647,1)});if(i===idx)line([[x,320],[x,700]],P.terra,3)}));
+};
+const plainPlan=planV5;
+planV5=function(sc,t){plainPlan(sc,t);['excel','poster','repair'].forEach((k,i)=>reveal(t-sc.beats[i].start,()=>pictogram(k,590+i*580,322,48)))};
+const plainAI=aiV5;
+aiV5=function(sc,t){plainAI(sc,t);const idx=sc.beats.indexOf(beatAt(t)),age=t-beatAt(t).start;if(idx<2){reveal(t-sc.start-1,()=>{pictogram('book',350,565,88);pictogram('chat',1140,565,88);text(idx?'Comprovem el resultat':'Patrons + context',1280,623,31,P.terra,600);if(idx)pictogram('alert',1690,565,70)});}else if(idx<4){reveal(t-sc.beats[2].start-1.3,()=>{ctx.save();ctx.strokeStyle=P.terra;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(1500,730,145,28,0,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.ellipse(1500,730,105,16,0,0,Math.PI*2);ctx.stroke();ctx.restore();pictogram('chef',1080,660,85)})}};
+
+const plainEntry=entry;
+entry=function(){plainEntry();['excel','poster','screen'].forEach((k,i)=>pictogram(k,1735,295+i*110,50))};
+const plainClose=closeDemo;
+closeDemo=function(sc,t){plainClose(sc,t);pictogram(sc.beats.indexOf(beatAt(t))===0?'book':'person',1275,389,90)};
 </script>
 <script>const $=id=>document.getElementById(id);
 const fmt=seconds=>{const n=Math.max(0,Math.floor(seconds));return `${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`};
